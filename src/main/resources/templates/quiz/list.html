@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Html.html to edit this template
+-->
+<html>
+    <head>
+        <title>All Quizzes</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" integrity="sha384-tViUnnbYAV00FLIhhi3v/dWt3Jxw4gZQcNoSCxCIFNJVCx7/D55/wXsrNIRANwdD" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    </head>
+    <body>
+        <div class="container" id="app">
+            <a href='/quiz/add' class="btn btn-primary" data-toggle="tooltip" data-placement="top" title="new"><span class="bi bi-plus"></span>&nbsp;</a>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Subject</th>
+                        <th>Created</th>
+                        <th>LastModified</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="quiz in quizzes">
+                        <td>{{quiz.id}}</td>
+                        <td>{{quiz.subject}}</td>
+                        <td>{{quiz.createdDate}}</td>
+                        <td>{{quiz.lastModified}}</td>
+                        <td>
+                            <a v-bind:href="'/quiz/edit?id='+quiz.id" class='btn btn-warning' data-toggle="tooltip" data-placement="top" title="edit"><span class="bi bi-pencil-square"></span></a>&nbsp;
+                            <a v-on:click='remove(quiz.id);' class='btn btn-danger' data-toggle="tooltip" data-placement="top" title="delete"><span class="bi bi-trash"></span></a>&nbsp;
+                            <a v-bind:href="'/studentReply/list?quizId='+quiz.id" class='btn btn-primary' data-toggle="tooltip" data-placement="top" title="see student replies"><span class="bi bi-eye"></span></a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <script type="module">
+            import { createApp, ref } from 'https://unpkg.com/vue@3/dist/vue.esm-browser.js'
+
+            let app=createApp({
+                data(){
+                    return {
+                        "quizzes": []
+                    };
+                },
+                methods:{
+                    "remove": function(id){
+                        $.ajax("/api/quiz/id/"+id, {
+                            type: "delete",
+                            success: function(){
+                                window.location.reload();
+                            }
+                        });
+                    }
+                }
+                
+            });
+            
+            app=app.mount('#app');
+            
+            $.ajax("/api/quizzes", {
+                success: function(quizzes){
+                    app.quizzes=quizzes;
+                }
+            });
+        </script>
+    </body>
+</html>
