@@ -6,6 +6,7 @@ package rocks.imsofa.codereview.PuppyCodeReview.apis;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,7 +29,7 @@ public class PeerReviewAPIController {
     }
     
     @PostMapping("/api/submitPeerReviewResult/taskId/{taskId}")
-    public void submitPeerReviewResult(String taskId, @RequestBody PeerReviewResultsEntity peerReviewResultsEntity){
+    public void submitPeerReviewResult(@PathVariable("taskId") String taskId, @RequestBody PeerReviewResultsEntity peerReviewResultsEntity){
         peerReviewTaskManagementService.submitPeerReviewResult(taskId, peerReviewResultsEntity);
     }
 }

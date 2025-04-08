@@ -17,8 +17,8 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Html.html to edit thi
         <div class="container" id="app">
             <a v-bind:href="'/studentReply/list?quizId='+quizId" class="btn btn-success" data-toggle="tooltip" data-placement="top" title="back"><span class="bi bi-arrow-left-square"></span>&nbsp;</a>
             <form class="form">
-                <label for="subject">Subject:</label>
-                <input type="text" id="subject" class="form-control" v-model='studentReply.quiz.subject' readonly v-if="studentReply.quiz"/><br/>  
+                <label for="subject">Description:</label>
+                <input type="text" id="objective" class="form-control" v-model='studentReply.quiz.objective' readonly v-if="studentReply.quiz"/><br/>  
                 <label for="author">Author:</label>
                 <input type="text" id="author" class="form-control" v-model='studentReply.author'/><br/>   
                 <label for="code">Code:</label>

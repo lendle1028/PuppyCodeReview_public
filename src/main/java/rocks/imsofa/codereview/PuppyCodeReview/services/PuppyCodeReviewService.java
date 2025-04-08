@@ -17,6 +17,9 @@ import rocks.imsofa.codereview.ReviewResults;
 public class PuppyCodeReviewService {
     private PuppyCodeReviewer puppyCodeReviewer=new CacheablePuppyCodeReviewer();
     public ReviewResults review(String language, String objective, String studentCode, String answer) throws Exception{
+        if(studentCode==null){
+            return new ReviewResults();
+        }
         return this.puppyCodeReviewer.review(language, objective, studentCode, answer);
     }
 }
