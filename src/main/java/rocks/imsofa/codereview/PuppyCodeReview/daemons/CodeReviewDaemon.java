@@ -59,6 +59,11 @@ public class CodeReviewDaemon extends Thread{
                 Thread.sleep(30000);
             } catch (Exception ex) {
                 Logger.getLogger(CodeReviewDaemon.class.getName()).log(Level.SEVERE, null, ex);
+                try {
+                    Thread.sleep(30000);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
             }
         }
     }

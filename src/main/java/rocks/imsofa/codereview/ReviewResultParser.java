@@ -15,6 +15,9 @@ import java.util.Map;
 public class ReviewResultParser {
     public ReviewResults parse(String json){
         Gson gson=new Gson();
+        int index=json.lastIndexOf("}");
+        json=json.substring(0, index+1);
+        System.out.println(json);
         Map raw=gson.fromJson(json, Map.class);
         ReviewResults ret=new ReviewResults();
         Map rawScores=(Map) raw.get("scores");

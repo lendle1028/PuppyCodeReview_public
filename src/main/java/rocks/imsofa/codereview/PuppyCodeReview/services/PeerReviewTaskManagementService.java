@@ -6,6 +6,7 @@ package rocks.imsofa.codereview.PuppyCodeReview.services;
 
 import com.google.gson.Gson;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
@@ -36,7 +37,7 @@ public class PeerReviewTaskManagementService {
         //purge completed and timeout tasks
         List<PeerReviewTask> newQueue = new ArrayList<>();
         for (PeerReviewTask task : tasks) {
-            if (!task.getState().equals(PeerReviewTaskState.FINISHED)
+            if (task.getState().equals(PeerReviewTaskState.REVIEWING)
                     && task.getReviewDeadline() > System.currentTimeMillis()) {
                 newQueue.add(task);
             }
@@ -44,6 +45,9 @@ public class PeerReviewTaskManagementService {
         //scan for StudentReply instances that haven't completed all peer reviewed
         List<StudentReply> notReviewedReply = studentReplyDao.findByPeerReviewed(false);
         for (StudentReply s : notReviewedReply) {
+            if(s.getCode()==null || s.getCode().isBlank()){
+                continue;
+            }
             //fork multiple instances
             for (int i = 0; i < (MIN_PEERREVIEW_COUNT - s.getPeerReviewResults().size()); i++) {
                 PeerReviewTask task = new PeerReviewTask();
@@ -56,6 +60,7 @@ public class PeerReviewTaskManagementService {
 
         this.tasks.clear();
         this.tasks.addAll(newQueue);
+        Collections.shuffle(tasks);
         Logger.getLogger(this.getClass().getName()).info("PeerReviewTask queue refreshed, now there are "+tasks.size()+" tasks in queue");
     }
 
@@ -68,6 +73,19 @@ public class PeerReviewTaskManagementService {
                 return task;
             }
         }
+        //if no available slot, generate a new one
+        
+        if (tasks != null && tasks.size() > 0) {
+            PeerReviewTask existingTask=tasks.get((int) (Math.random()*tasks.size()));
+            PeerReviewTask task = new PeerReviewTask();
+            task.setStudentReply(existingTask.getStudentReply());
+            //open for peer review (but not assigned)
+            task.setState(PeerReviewTaskState.REVIEWING);
+            task.setReviewStartTime(System.currentTimeMillis());
+            task.setReviewDeadline(task.getReviewStartTime() + REVIEW_DURATION);
+            tasks.add(task);
+            return task;
+        }
         return null;
     }
 
@@ -75,6 +93,7 @@ public class PeerReviewTaskManagementService {
     public synchronized void submitPeerReviewResult(String taskId, PeerReviewResultsEntity peerReviewResultsEntity) {
         long now = System.currentTimeMillis();
         for (PeerReviewTask task : tasks) {
+            Logger.getLogger(this.getClass().getName()).info("submitting peerreview for "+taskId);
             if (task.getId().equals(taskId) && task.getReviewDeadline() > now) {
                 task.setState(PeerReviewTaskState.FINISHED);
                 task.setReviewStartTime(System.currentTimeMillis());
@@ -83,6 +102,10 @@ public class PeerReviewTaskManagementService {
                 if(sOptional.isPresent()){
                     StudentReply studentReply=sOptional.get();
                     studentReply.getPeerReviewResults().add(peerReviewResultsEntity);
+                    if(studentReply.getPeerReviewResults().size() >= MIN_PEERREVIEW_COUNT){
+                        studentReply.setPeerReviewed(true);
+                    }
+                    Logger.getLogger(this.getClass().getName()).info("peer review entry appended to StudentReply "+studentReply.getId());
                     studentReplyDao.save(studentReply);
                 }
                 break;

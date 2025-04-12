@@ -32,6 +32,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Html.html to edit thi
         <div class="container" id="app">
             <a href="/quiz/list" class="btn btn-success" data-toggle="tooltip" data-placement="top" title="back"><span class="bi bi-arrow-left-square"></span>&nbsp;</a>
             <a v-bind:href="'/studentReply/add/quizId/'+quizId" class="btn btn-primary" data-toggle="tooltip" data-placement="top" title="new"><span class="bi bi-plus"></span>&nbsp;</a>
+            <a v-bind:href="'/studentReply/addMultiple/quizId/'+quizId" class="btn btn-warning" data-toggle="tooltip" data-placement="top" title="new"><span class="bi bi-upload"></span>&nbsp;</a>
             <table class="table">
                 <thead>
                     <tr>
@@ -73,8 +74,8 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Html.html to edit thi
                 </tbody>
             </table>
 
-            <div class="modal modal-lg" tabindex="-1" id="codeModal" >
-                <div class="modal-dialog" style="width: 95vw">
+            <div class="modal modal-xl" tabindex="-1" id="codeModal" >
+                <div class="modal-dialog modal-xl" style="width: 98vw">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title">Review Results of {{selected.id}}</h5>

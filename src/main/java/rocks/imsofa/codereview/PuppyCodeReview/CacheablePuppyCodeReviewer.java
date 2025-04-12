@@ -5,6 +5,11 @@
 package rocks.imsofa.codereview.PuppyCodeReview;
 
 import java.io.File;
+
+import com.google.api.client.util.Value;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
+import org.springframework.stereotype.Component;
 import rocks.imsofa.ai.puppychatter.cache.FileSystemCacheService;
 import rocks.imsofa.ai.puppychatter.openrouter.OpenrouterPuppyChatter;
 import rocks.imsofa.codereview.AbstractPuppyCodeReviewer;
@@ -13,16 +18,21 @@ import rocks.imsofa.codereview.AbstractPuppyCodeReviewer;
  *
  * @author USER
  */
+@Component
 public class CacheablePuppyCodeReviewer extends AbstractPuppyCodeReviewer{
-
+    private String apiKey=null;
+    @Autowired
+    private Environment env;
     @Override
     protected OpenrouterPuppyChatter getPuppyChatterInstance() {
         File rootCacheFolder=new File(".cache");
         if(!rootCacheFolder.exists()){
             rootCacheFolder.mkdirs();
         }
+        apiKey=env.getProperty("openrouter.api-key");
+        System.out.println("apiKey="+apiKey);
         OpenrouterPuppyChatter puppyChatter = new OpenrouterPuppyChatter(
-                "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", new FileSystemCacheService(rootCacheFolder));
+                apiKey, new FileSystemCacheService(rootCacheFolder));
         return puppyChatter;
     }
     

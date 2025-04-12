@@ -4,6 +4,7 @@
  */
 package rocks.imsofa.codereview.PuppyCodeReview.services;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rocks.imsofa.codereview.PuppyCodeReview.CacheablePuppyCodeReviewer;
 import rocks.imsofa.codereview.PuppyCodeReviewer;
@@ -15,8 +16,12 @@ import rocks.imsofa.codereview.ReviewResults;
  */
 @Service
 public class PuppyCodeReviewService {
-    private PuppyCodeReviewer puppyCodeReviewer=new CacheablePuppyCodeReviewer();
+    @Autowired
+    private CacheablePuppyCodeReviewer puppyCodeReviewer=null;//new CacheablePuppyCodeReviewer();
     public ReviewResults review(String language, String objective, String studentCode, String answer) throws Exception{
+        if(studentCode==null){
+            return new ReviewResults();
+        }
         return this.puppyCodeReviewer.review(language, objective, studentCode, answer);
     }
 }

@@ -27,6 +27,15 @@ public class InitTestDataAPIController {
     @Autowired
     private StudentReplyDao studentReplyDao;
     
+    @GetMapping("/api/clearReview")
+    @Transactional
+    public void clearReviewAction(){
+        List<StudentReply> list=studentReplyDao.findAll();
+        for(StudentReply s : list){
+            s.setReviewResults(null);
+            studentReplyDao.save(s);
+        }
+    }
     @GetMapping("/api/initTestData")
     @Transactional
     public void testDataAction(){
