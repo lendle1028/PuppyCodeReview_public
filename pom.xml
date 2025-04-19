@@ -11,7 +11,7 @@
     <groupId>rocks.imsofa.codereview</groupId>
     <artifactId>PuppyCodeReview</artifactId>
     <version>0.9</version>
-    <packaging>war</packaging>
+    <packaging>jar</packaging>
     <name>PuppyCodeReview</name>
     <description>PuppyCodeReview</description>
     <url/>

@@ -27,9 +27,9 @@ An AI-powered code review system designed to streamline and enhance the code rev
 # Clone the repository
 git clone https://github.com/lendle1028/PuppyCodeReview_public.git
 
-# Navigate to the project directory
+# Navigate to the project installation directory
 cd PuppyCodeReview_public
-
+add openrouter.api-key to the corresponding property in application.property
 # Run the jar file
 java -jar target/PuppyCodeReview-0.9.jar
 ```
